@@ -3,6 +3,7 @@
 	<head>
 		<link rel="stylesheet" href="bower_components/chartist/libdist/chartist.min.css"> 
 		<script src="bower_components/chartist/libdist/chartist.min.js"></script>
+		<script src="bower_components/velocity/velocity.min.js"></script>
 		<link href='https://fonts.googleapis.com/css?family=Lato:100,700' rel='stylesheet' type='text/css'>
 		<style type="text/css">
 
@@ -17,12 +18,12 @@
 				color: rgba(255,255,255,0.25);
 			}
 			.ct-chart .ct-label.ct-horizontal {
-				font-size: 3.5vmin;
+				font-size: 3vmin;
 				font-weight: 600;
 			}
 			.ct-series-a .ct-bar {
 				stroke: rgba(255,255,255,0.25);
-				stroke-width: 22.5%;
+				stroke-width: 18.75%;
 				stroke-linecap: round;
 
 			}
@@ -71,7 +72,6 @@
 				font-size: 6vmin;
 			}
 
-
 			select {
 				border: none;
 				color: white;
@@ -81,12 +81,34 @@
 
 			}
 
+			input {
+				background-color: rgba(255,255,255,0.0);
+				color: rgba(0,0,0, 0.5);
+				border: none;
+				float: left;
+				text-align: right;
+				padding-top: 1px;
+				padding-bottom: 1px;
+				font-size: 2.5vmin;
+			}
+
+			td {
+				padding-top: 1%;
+				padding-bottom: 1%;
+				padding-left: 4%;
+				padding-right: 4%;
+				margin-top: 0px;
+				margin-bottom: 0px;
+				size: 6;
+			}
+
 			.contentDiv {
 				width: 100%;
 				float: left;
 				padding: 0;
 				margin: 0 auto;
 				height: 100vh;
+				display: inline-block;
 			}
 
 			.timeButton {
@@ -108,7 +130,7 @@
 
 			.optionButtonLeft {
 				-webkit-appearance: none;
-				font-size: 2.5vmin;
+				font-size: 3.5vmin;
 				width: 33%;
 				border-style: solid;
 				border-width: 0.1%;
@@ -127,7 +149,7 @@
 
 			.optionButtonRight {
 				-webkit-appearance: none;
-				font-size: 2.5vmin;
+				font-size: 3.5vmin;
 				width: 33%;
 				border-style: solid;
 				border-width: .1%;
@@ -146,7 +168,7 @@
 
 			.optionButtonCenter {
 				-webkit-appearance: none;
-				font-size: 2.5vmin;
+				font-size: 3.5vmin;
 				width: 33%;
 				border-style: solid;
 				border-width: .1%;
@@ -172,6 +194,13 @@
 
 			}
 
+			.settingsBoxP {
+				text-align: left;
+				font-size: 3vmin;
+				margin-top: 0;
+				margin-bottom: 0;
+			}
+
 			#wrapper {
 				overflow-x: hidden;
   				position: absolute;
@@ -179,9 +208,11 @@
   				overflow: auto;
   				width: 100%;
 				height: 100%;
-  				-webkit-scroll-snap-points-y: repeat(100%);
+				scroll-snap-points-y: repeat(100vh);
+				scroll-snap-type: mandatory;
+				-webkit-overflow-scrolling: touch;
+  				-webkit-scroll-snap-points-y: repeat(100vh);
   				-webkit-scroll-snap-type: mandatory;
-  				-webkit-scroll-snap-destination: 100% 0%;
 			}
 
 			#mainDiv {
@@ -192,6 +223,51 @@
 			}
 			#distDiv {
 				background: -webkit-linear-gradient( #4CAF50 95%, #4CAF50);
+			}
+			#settingsBoxSettingsDiv {
+				background-color: rgba(255,255,255,0.95);
+				position: absolute;
+				right: 6%;
+				top: 6%;
+				z-index: 1;
+				height: 0px;
+				width: 0px;
+				opacity: 0;
+				border-radius: 10%;
+				-webkit-box-shadow: 0px 10px 15px 7px rgba(0,0,0,0.25);
+				/*-webkit-animation-name: floatAnimation;
+				-webkit-animation-duration: 2s;
+				-webkit-animation-iteration-count: infinite;*/
+			}
+			#settingsBox {
+				background-color: rgba(0,0,0,0.35);
+				position: absolute;
+				right: 5vmin;
+				top: 5vh;
+				height: 6vmin;
+				width: 6vmin;
+				z-index: 1;
+				border-radius: 100%;
+				overflow: hidden;
+			}
+			#settingsBoxLeftDoor {
+				background-color: rgba(179,157,219 ,1);
+				position: absolute;
+				right: 3.1vmin;
+				top: 0vh;
+				height: 6vmin;
+				width: 2.9vmin;
+				z-index: 2;
+			}
+
+			#settingsBoxRightDoor {
+				background-color: rgba(179,157,219 ,1);
+				position: absolute;
+				right: 0vw;
+				top: 0vh;
+				height: 6vmin;
+				width: 2.9vmin;
+				z-index: 2;
 			}
 
 		/* rules for fade in */
@@ -204,12 +280,48 @@
     			}
 			}
 
+			/*@-webkit-keyframes floatAnimation {
+				0% {
+					-webkit-transform: translateY(0%);	
+				}
+				50% {
+					-webkit-transform: translateY(4%);	
+				}	
+				100% {
+					-webkit-transform: translateY(0%);
+				}			
+			}*/
+
 		</style>
 		<title>Reach</title>
 	</head>
 	<body>
 		<div id="wrapper">
 			<div id="mainDiv" class="contentDiv" style="text-align:center;">
+				<div id="settingsBoxSettingsDiv">
+					<p><b> Set Goals </b></p>
+					<form name="setGoals">
+						<table style="margin:0 auto;height:75%;width:80%;">
+							<tr>
+								<td><p class="settingsBoxP">Steps: </p></td>
+								<td><input type="number" name="stepGoalEntry" value="10000"></td>
+							</tr>
+							<tr>
+								<td><p class="settingsBoxP">Distance: </p></td>
+								<td><input type="number" name="distanceGoalEntry" value="8.0"></td>
+							</tr>
+							<tr>
+								<td><p class="settingsBoxP">Calories: </p></td>
+								<td><input type="number" name="calorieGoalEntry" value="700"></td>
+							</tr>
+						</table>
+						<input type="submit" name="goalSave" value="Save">
+					</form>
+				</div>
+				<div id="settingsBox" onClick="settingsBox.interact()">
+					<div id="settingsBoxLeftDoor"></div>
+					<div id="settingsBoxRightDoor"></div>
+				</div>
 				<h1 style="text-align:center;color:white;margin-bottom:1%;padding:0%;animation: fadeIn 1s ease-in;">Reach</h1>
 				<h2 style="text-align:center;color:white;size:50%;padding:0%;animation: fadeIn 1s ease-in;">Daily Activity Summary</h2>
 				<div style="margin:0 auto;width:100%;margin-top:2%;margin-bottom:3%;text-align:center;">
@@ -255,19 +367,104 @@
 		</div>
 	</body>
 	<script type="application/javascript">
+		// SETTINGS BOX //
+			var settingsButton = function(HTMLid) {
+				this.HTMLid = HTMLid;
+				this.isOpen = false;
+				this.leftDoor = HTMLid + "LeftDoor";
+				this.rightDoor = HTMLid + "RightDoor";
+				this.settingsDiv = HTMLid + "SettingsDiv";
+				this.interact = function() {
+					var lDoor = document.getElementById(this.leftDoor);
+					var rDoor = document.getElementById(this.rightDoor);
+					var sDiv = document.getElementById(this.settingsDiv);
+					if( this.isOpen) {
+						this.isOpen = false;
+						console.log(this.isOpen);
+						//close doors//
+						console.log("closing doors");
+						Velocity(
+							lDoor, 
+							{
+								translateX : "0%"
+							},
+							{
+								duration : 150,
+								easing : "ease-out"
+							}
+						);
+						Velocity(
+							rDoor, 
+							{
+								translateX : "-0%"
+							},
+							{
+								duration : 150,
+								easing : "ease-out"
+							}
+						);
+						//hide settings box//
+						Velocity(
+							sDiv,
+							{
+								translateX : "0%",
+								translateY : "0%",
+								height : 0,
+								width : 0,
+								opacity : 0
+							},
+							{
+								duration : 150,
+								easing : "ease-out"
+							}
+						);
 
-		//screen height changing//
-		var setDiv = function() {
-			var screenHeight = document.body.clientHeight;
-			var divArray = document.getElementsByClassName("contentDiv");
-			for( var i = 0; i < divArray.length; i++) {
-				divArray[i].style.height = screenHeight;
-				console.log("resized " + i)
+					} else {
+						this.isOpen = true;
+						console.log(this.isOpen);
+						console.log("opening doors");
+						// open door animation //
+						Velocity(
+							lDoor, 
+							{
+								translateX : "-75%"
+							},
+							{
+								duration : 150,
+								easing : "ease-out"
+							}
+						);
+						Velocity(
+							rDoor, 
+							{
+								translateX : "75%"
+							},
+							{
+								duration : 150,
+								easing : "ease-out"
+							}
+						);					
+						// reveal settings box //
+						Velocity(
+							sDiv,
+							{
+								translateX : "-10%",
+								translateY : "15%",
+								height : "25%",
+								width : "50%",
+								opacity : 1
+							},
+							{
+								duration : 150,
+								easing : "ease-out"
+							}
+						);
+					}
+				}
+
 			}
-			
-		}
-		//window.addEventListener("DOMContentLoaded", setDiv);//
-		//window.addEventListener("resize", setDiv);//
+
+			var settingsBox = new settingsButton("settingsBox");
 
 
 		var goalType = function(total,goal,average) {
@@ -281,148 +478,149 @@
 		var distance = new goalType(3,3,3.5);
 		var calories = new goalType (2000,2500,2100);
 
+		// CREATE LOGIC CLASS AND CREATE LOGIC ITEMS //
+			var logicVariables = function(initialActivity, initialMetric, InitialGoal) {
+				this.activity = initialActivity;
+				this.metric = initialMetric;
+				this.goal = InitialGoal;
+				this.updateVariables = function(updateVariable) {
+					activities = ["walk","run","exercise"];
+					goals = ["step","distance","calorie"];
+					metrics = ["minutes","miles"];
 
-		var logicVariables = function(initialActivity, initialMetric, InitialGoal) {
-			this.activity = initialActivity;
-			this.metric = initialMetric;
-			this.goal = InitialGoal;
-			this.updateVariables = function(updateVariable) {
-				activities = ["walk","run","exercise"];
-				goals = ["step","distance","calorie"];
-				metrics = ["minutes","miles"];
-
-				if( activities.indexOf(updateVariable) >= 0) {
-					for(var a = 0; a < activities.length; a++) {
-						var tempAct = document.getElementById(activities[a]);
-						tempAct.style.backgroundColor = "rgba(255,255,255,0.15)";
-						tempAct.style.color = "rgba(255,255,255,0.45)";
-					}
-					var newAct = document.getElementById(updateVariable);
-					newAct.style.backgroundColor = "rgba(255,255,255,0.45)";
-					newAct.style.color = "rgba(255,255,255,0.75)";
-					this.activity = updateVariable;
-
-				} else if( goals.indexOf(updateVariable) >= 0) {
-					for(var g = 0; g < goals.length; g++) {
-						var tempGoal = document.getElementById(goals[g]);
-						tempGoal.style.backgroundColor = "rgba(255,255,255,0.15)";
-						tempGoal.style.color = "rgba(255,255,255,0.45)";
-					}
-					var newGoal = document.getElementById(updateVariable);
-					newGoal.style.backgroundColor = "rgba(255,255,255,0.45)";
-					newGoal.style.color = "rgba(255,255,255,0.75)";
-					this.goal = updateVariable;
-
-				} else {
-					for(var m = 0; m < metrics.length; m++) {
-						var tempMetric = document.getElementById(metrics[m]);
-						tempMetric.style.backgroundColor = "rgba(255,255,255,0.15)";
-						tempMetric.style.color = "rgba(255,255,255,0.45)";
-					}
-					var newMetric = document.getElementById(updateVariable);
-					newMetric.style.backgroundColor = "rgba(255,255,255,0.45)";
-					newMetric.style.color = "rgba(255,255,255,0.75)";
-					this.metric = updateVariable;
-				}
-			}
-
-			this.updateSuggestion = function() {
-			
-				var rateArrayDict = {
-					step : {
-						walk : {
-							miles : 2000,
-							minutes : 100
-						},
-						run : {
-							miles : 1300,
-							minutes : 150
-						},
-						exercise : {
-							miles : 0,
-							minutes : 0
+					if( activities.indexOf(updateVariable) >= 0) {
+						for(var a = 0; a < activities.length; a++) {
+							var tempAct = document.getElementById(activities[a]);
+							tempAct.style.backgroundColor = "rgba(255,255,255,0.15)";
+							tempAct.style.color = "rgba(255,255,255,0.45)";
 						}
-					},
-					calorie : {
-						walk : {
-							miles : 120,
-							minutes : 5
-						},
-						run : {
-							miles : 151.2,
-							minutes : 12.6
-						},
-						exercise : {
-							miles : 0,
-							minutes : 8.3
+						var newAct = document.getElementById(updateVariable);
+						newAct.style.backgroundColor = "rgba(255,255,255,0.45)";
+						newAct.style.color = "rgba(255,255,255,0.75)";
+						this.activity = updateVariable;
+
+					} else if( goals.indexOf(updateVariable) >= 0) {
+						for(var g = 0; g < goals.length; g++) {
+							var tempGoal = document.getElementById(goals[g]);
+							tempGoal.style.backgroundColor = "rgba(255,255,255,0.15)";
+							tempGoal.style.color = "rgba(255,255,255,0.45)";
 						}
-					},
-					distance : {
-						walk : {
-							miles : 1,
-							minutes : 0.042
-						},
-						run : {
-							miles : 1,
-							minutes : 0.083
-						},
-						exercise : {
-							miles : 0,
-							minutes : 0
-						}
-					}
-				};
+						var newGoal = document.getElementById(updateVariable);
+						newGoal.style.backgroundColor = "rgba(255,255,255,0.45)";
+						newGoal.style.color = "rgba(255,255,255,0.75)";
+						this.goal = updateVariable;
 
-		        var activity = this.activity;
-		        var metric = this.metric;
-		        var goal = this.goal;
-
-		        var outputFactor = rateArrayDict[goal][activity][metric];
-		        var remainderVar
-		        var outputVar;
-		        if( goal === "step") {
-		        	remainderVar = steps.remaining;
-		        	outputVar = steps.remaining / outputFactor;
-		        } else if( goal === "calorie") {
-		        	remainderVar = calories.remaining;
-		        	outputVar = calories.remaining / outputFactor;
-		        } else {
-		        	remainderVar = distance.remaining;
-		        	outputVar = distance.remaining / outputFactor;
-		        }
-
-		        var returnLogic = document.getElementById("returnLogic");
-		        if( remainderVar <= 0) {
-		        	returnLogic.innerHTML = "Congratulations! You already reached your " + goal + " goal today!";
-		        } else if( this.activity === "exercise" && (this.goal === "step" || this.goal === "distance" || this.metric === "miles")) {
-		        	returnLogic.innerHTML = "Oops! I Don't think you can reach your " + goal + " goal that way!";
-		        } else {
-		        	returnLogic.innerHTML = activity.charAt(0).toUpperCase() + activity.slice(1) + " for " + outputVar.toFixed(1) + " " + metric + " to <i>reach</i>  your " + goal + " goal today!";
-		    	}
-		    }
-		}
-
-		logicVariableSet = new logicVariables("walk","minutes","step");
-
-		var buttonSet = function(buttonType) {
-			this.buttonType = buttonType;
-			this.updateSet = function(buttonValue) {
-				var buttonList = [this.buttonType + "30", this.buttonType + "90", this.buttonType + "180", this.buttonType + "360"];
-				console.log(buttonList);
-				for( var a = 0; a < buttonList.length; a++) {
-					if( buttonList[a] === this.buttonType + buttonValue) {
-						var buttonID = document.getElementById(this.buttonType + buttonValue);
-						buttonID.style.backgroundColor = "rgba(255,255,255,0.45)";
-						buttonID.style.color = "rgba(255,255,255,0.75)";
-						//add logic to update graph//
 					} else {
-						var notButtonID = document.getElementById(buttonList[a]);
-						notButtonID.style.backgroundColor = "rgba(255,255,255,0.15)";
-						notButtonID.style.color = "rgba(255,255,255,0.45)";
+						for(var m = 0; m < metrics.length; m++) {
+							var tempMetric = document.getElementById(metrics[m]);
+							tempMetric.style.backgroundColor = "rgba(255,255,255,0.15)";
+							tempMetric.style.color = "rgba(255,255,255,0.45)";
+						}
+						var newMetric = document.getElementById(updateVariable);
+						newMetric.style.backgroundColor = "rgba(255,255,255,0.45)";
+						newMetric.style.color = "rgba(255,255,255,0.75)";
+						this.metric = updateVariable;
+					}
+				}
+
+				this.updateSuggestion = function() {
+				
+					var rateArrayDict = {
+						step : {
+							walk : {
+								miles : 2000,
+								minutes : 100
+							},
+							run : {
+								miles : 1300,
+								minutes : 150
+							},
+							exercise : {
+								miles : 0,
+								minutes : 0
+							}
+						},
+						calorie : {
+							walk : {
+								miles : 120,
+								minutes : 5
+							},
+							run : {
+								miles : 151.2,
+								minutes : 12.6
+							},
+							exercise : {
+								miles : 0,
+								minutes : 8.3
+							}
+						},
+						distance : {
+							walk : {
+								miles : 1,
+								minutes : 0.042
+							},
+							run : {
+								miles : 1,
+								minutes : 0.083
+							},
+							exercise : {
+								miles : 0,
+								minutes : 0
+							}
+						}
+					};
+
+			        var activity = this.activity;
+			        var metric = this.metric;
+			        var goal = this.goal;
+
+			        var outputFactor = rateArrayDict[goal][activity][metric];
+			        var remainderVar
+			        var outputVar;
+			        if( goal === "step") {
+			        	remainderVar = steps.remaining;
+			        	outputVar = steps.remaining / outputFactor;
+			        } else if( goal === "calorie") {
+			        	remainderVar = calories.remaining;
+			        	outputVar = calories.remaining / outputFactor;
+			        } else {
+			        	remainderVar = distance.remaining;
+			        	outputVar = distance.remaining / outputFactor;
+			        }
+
+			        var returnLogic = document.getElementById("returnLogic");
+			        if( remainderVar <= 0) {
+			        	returnLogic.innerHTML = "Congratulations! You already reached your " + goal + " goal today!";
+			        } else if( this.activity === "exercise" && (this.goal === "step" || this.goal === "distance" || this.metric === "miles")) {
+			        	returnLogic.innerHTML = "Oops! I Don't think you can reach your " + goal + " goal that way!";
+			        } else {
+			        	returnLogic.innerHTML = activity.charAt(0).toUpperCase() + activity.slice(1) + " for " + outputVar.toFixed(1) + " " + metric + " to <i>reach</i>  your " + goal + " goal today!";
+			    	}
+			    }
+			}
+
+			logicVariableSet = new logicVariables("walk","minutes","step");
+
+		// CREATE BUTTON CLASS //
+			var buttonSet = function(buttonType) {
+				this.buttonType = buttonType;
+				this.updateSet = function(buttonValue) {
+					var buttonList = [this.buttonType + "30", this.buttonType + "90", this.buttonType + "180", this.buttonType + "360"];
+					console.log(buttonList);
+					for( var a = 0; a < buttonList.length; a++) {
+						if( buttonList[a] === this.buttonType + buttonValue) {
+							var buttonID = document.getElementById(this.buttonType + buttonValue);
+							buttonID.style.backgroundColor = "rgba(255,255,255,0.45)";
+							buttonID.style.color = "rgba(255,255,255,0.75)";
+							//add logic to update graph//
+						} else {
+							var notButtonID = document.getElementById(buttonList[a]);
+							notButtonID.style.backgroundColor = "rgba(255,255,255,0.15)";
+							notButtonID.style.color = "rgba(255,255,255,0.45)";
+						}
 					}
 				}
 			}
-		}
 
 		// CREATE BUTTONS // 
 
@@ -599,7 +797,6 @@
 			);
 
 		// CALORIE CHARTS //
-
 
 		// CREATE CHARTS //
 			var summaryBar = new Chartist.Bar("#ctSummaryBar", summaryChart.chartData, summaryChart.chartOptions);
