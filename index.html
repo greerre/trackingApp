@@ -63,6 +63,7 @@
 				font-family: Lato, sans-serif;
 				font-weight: 200;
 				font-size: 10vmin;
+				margin-top: 1vmin;
 			}
 
 			h2 {
@@ -89,7 +90,7 @@
 				text-align: right;
 				padding-top: 1px;
 				padding-bottom: 1px;
-				font-size: 2.5vmin;
+				font-size: 3.5vmin;
 			}
 
 			td {
@@ -109,6 +110,7 @@
 				margin: 0 auto;
 				height: 100vh;
 				display: inline-block;
+				-webkit-scroll-snap-coordinate: 50% 50%;
 			}
 
 			.timeButton {
@@ -191,27 +193,29 @@
 				margin-right: 3%;
 				text-align: center;
 				margin-bottom: .5%;
+				margin-top: 1%;
 
 			}
 
 			.settingsBoxP {
 				text-align: left;
-				font-size: 3vmin;
+				font-size: 4vmin;
 				margin-top: 0;
 				margin-bottom: 0;
 			}
 
 			#wrapper {
 				overflow-x: hidden;
+				overflow-y: auto;
   				position: absolute;
   				top: 0;
-  				overflow: auto;
   				width: 100%;
 				height: 100%;
+				overflow-scrolling: touch;
 				scroll-snap-points-y: repeat(100vh);
 				scroll-snap-type: mandatory;
 				-webkit-overflow-scrolling: touch;
-  				-webkit-scroll-snap-points-y: repeat(100vh);
+  				-webkit-scroll-snap-destination: 50% 50%;
   				-webkit-scroll-snap-type: mandatory;
 			}
 
@@ -251,7 +255,7 @@
 				overflow: hidden;
 			}
 			#settingsBoxLeftDoor {
-				background-color: rgba(179,157,219 ,1);
+				background-color: rgba(126,87,194 ,0.9);
 				position: absolute;
 				right: 3.1vmin;
 				top: 0vh;
@@ -261,13 +265,49 @@
 			}
 
 			#settingsBoxRightDoor {
-				background-color: rgba(179,157,219 ,1);
+				background-color: rgba(126,87,194 ,0.9);
 				position: absolute;
 				right: 0vw;
 				top: 0vh;
 				height: 6vmin;
 				width: 2.9vmin;
 				z-index: 2;
+			}
+
+			#settingsBoxSaveButton {
+				-webkit-appearance: none;
+				font-size: 4vmin;
+				width: 25%;
+				border-width: 1px;
+				border-top-left-radius: 8px;
+				border-bottom-left-radius: 8px;
+				border: none;
+				outline: none;
+				color: rgba(0,0,0, 0.75);
+				background-color: rgba(0,0,0,0.15);
+				padding-top: 1%;
+				padding-bottom: 1%;
+				margin:0 auto;
+				margin-left: 24%;
+				margin-right: 1%;
+				float: left;
+			}
+			#settingsBoxCancelButton {
+				-webkit-appearance: none;
+				font-size: 4vmin;
+				width: 25%;
+				border-top-right-radius: 8px;
+				border-bottom-right-radius: 8px;
+				border: none;
+				outline: none;
+				color: rgba(0,0,0, 0.75);
+				background-color: rgba(0,0,0,0.15);
+				padding-top: 1%;
+				padding-bottom: 1%;
+				margin:0 auto;
+				margin-right: 24%;
+				margin-left: 1%;
+				float: right;
 			}
 
 		/* rules for fade in */
@@ -300,23 +340,27 @@
 			<div id="mainDiv" class="contentDiv" style="text-align:center;">
 				<div id="settingsBoxSettingsDiv">
 					<p><b> Set Goals </b></p>
-					<form name="setGoals">
+					<form name="settingsBoxSettingsForm" id="settingsBoxSettingsForm" onSubmit="return settingsBox.formValidate()">
 						<table style="margin:0 auto;height:75%;width:80%;">
 							<tr>
 								<td><p class="settingsBoxP">Steps: </p></td>
-								<td><input type="number" name="stepGoalEntry" value="10000"></td>
+								<td><input type="number" name="stepGoalEntry" id="settingsBoxStepGoalEntry" value="10000"></td>
 							</tr>
 							<tr>
 								<td><p class="settingsBoxP">Distance: </p></td>
-								<td><input type="number" name="distanceGoalEntry" value="8.0"></td>
+								<td><input type="number" name="distanceGoalEntry" id="settingsBoxDistanceGoalEntry" value="8.0"></td>
 							</tr>
 							<tr>
 								<td><p class="settingsBoxP">Calories: </p></td>
-								<td><input type="number" name="calorieGoalEntry" value="700"></td>
+								<td><input type="number" name="calorieGoalEntry" id="settingsBoxCalorieGoalEntry" value="700"></td>
 							</tr>
 						</table>
-						<input type="submit" name="goalSave" value="Save">
+						<div id="saveCancelContainerDiv" style="margin:0 auto;width:80%;margin-top:10%;">
+							<button type="submit" name="submitButton" value="save" id="settingsBoxSaveButton" onClick="settingsBox.saveOrCancel='save'">Save</button>
+							<button type="submit" name="submitButton" value="cancel" id="settingsBoxCancelButton" onClick="settingsBox.saveOrCancel='cancel'">Cancel</button>
+						</div>
 					</form>
+
 				</div>
 				<div id="settingsBox" onClick="settingsBox.interact()">
 					<div id="settingsBoxLeftDoor"></div>
@@ -324,8 +368,11 @@
 				</div>
 				<h1 style="text-align:center;color:white;margin-bottom:1%;padding:0%;animation: fadeIn 1s ease-in;">Reach</h1>
 				<h2 style="text-align:center;color:white;size:50%;padding:0%;animation: fadeIn 1s ease-in;">Daily Activity Summary</h2>
-				<div style="margin:0 auto;width:100%;margin-top:2%;margin-bottom:3%;text-align:center;">
+				<div style="margin:0 auto;width:100%;margin-top:2%;margin-bottom:1%;text-align:center;">
 					<div class="ct-chart" id="ctSummaryBar"></div>
+				</div>
+				<div id="logicLine" style="float:left;text-align:center;width:100%;margin-bottom:2vmax;margin-top:1vh;">
+					<p id="returnLogic" style="font-size:6vmin;float:left;text-align:center;color:white;margin:0 auto;width:100%;animation: fadeIn 1s ease-in;"><b>Walk for 10 minutes to reach your step goal</b></p>
 				</div>
 				<div id="logicButtonsDiv" style="width:100%;">
 					<div id="activityButtonDiv" class="buttonDiv">
@@ -337,9 +384,6 @@
 					<div id="metricButtonDiv" class="buttonDiv">
 						<button class="optionButtonLeft" style="width:49.5%;" id="minutes" onClick="logicVariableSet.updateVariables('minutes');logicVariableSet.updateSuggestion()">Minutes</button><button class="optionButtonRight" style="width:49.5%;" id="miles" onClick="logicVariableSet.updateVariables('miles');logicVariableSet.updateSuggestion()">Miles</button>
 					</div>
-				</div>
-				<div id="logicLine" style="float:left;text-align:center;width:100%;margin-bottom:3vmax;margin-top:5vh;">
-					<p id="returnLogic" style="font-size:6vmin;float:left;text-align:center;color:white;margin:0 auto;width:100%;animation: fadeIn 1s ease-in;">Walk for 10 minutes to reach your step goal</p>
 				</div>
 			</div>
 			<div id="stepsDiv" class="contentDiv" style="text-align:center;">
@@ -367,6 +411,12 @@
 		</div>
 	</body>
 	<script type="application/javascript">
+
+		var isNumeric = function(n) {
+  			return !isNaN(parseFloat(n)) && isFinite(n);
+		} // function from DemoUser on stack overflow //
+
+
 		// SETTINGS BOX //
 			var settingsButton = function(HTMLid) {
 				this.HTMLid = HTMLid;
@@ -374,6 +424,23 @@
 				this.leftDoor = HTMLid + "LeftDoor";
 				this.rightDoor = HTMLid + "RightDoor";
 				this.settingsDiv = HTMLid + "SettingsDiv";
+				this.settingsForm = HTMLid + "SettingsForm";
+				this.saveButton = HTMLid + "SaveButton";
+				this.cancelButton = HTMLid + "CancelButton";
+				this.saveOrCancel = "";
+				this.stepGoalEntry = HTMLid + "StepGoalEntry";
+				this.distanceGoalEntry = HTMLid + "DistanceGoalEntry";
+				this.calorieGoalEntry = HTMLid + "CalorieGoalEntry";
+
+				this.updateFormValues = function() {
+					var stepsGoal = document.getElementById(this.stepGoalEntry);
+					var distanceGoal = document.getElementById(this.distanceGoalEntry);
+					var calorieGoal = document.getElementById(this.calorieGoalEntry);
+					stepsGoal.value = steps.goal;
+					distanceGoal.value = distance.goal;
+					calorieGoal.value = calories.goal;
+				}
+
 				this.interact = function() {
 					var lDoor = document.getElementById(this.leftDoor);
 					var rDoor = document.getElementById(this.rightDoor);
@@ -420,6 +487,7 @@
 						);
 
 					} else {
+						this.updateFormValues()
 						this.isOpen = true;
 						console.log(this.isOpen);
 						console.log("opening doors");
@@ -450,8 +518,8 @@
 							{
 								translateX : "-10%",
 								translateY : "15%",
-								height : "25%",
-								width : "50%",
+								height : "35%",
+								width : "75%",
 								opacity : 1
 							},
 							{
@@ -462,21 +530,80 @@
 					}
 				}
 
+				this.formValidate = function(saveOrCancel) {
+					var formID = document.getElementById(this.settingsForm);
+					console.log(this.saveOrCancel);
+					if( this.saveOrCancel === "cancel") {
+						this.interact();
+						return false;	
+					} else if( this.saveOrCancel === "save") {
+						var stepEntry = document.forms[this.settingsForm]["stepGoalEntry"].value;
+						var distEntry = document.forms[this.settingsForm]["distanceGoalEntry"].value;
+						var calEntry = document.forms[this.settingsForm]["calorieGoalEntry"].value;
+						var errorList = [];
+						console.log("created vars")
+						if( !isNumeric(stepEntry)) {
+							errorList.push("Step goal should be a number. ");
+						} else if( stepEntry > 99999) {
+							errorList.push("Step goal should be smaller. ");
+						} else if( !isNumeric(distEntry)) {
+							errorList.push("Distance goal should be a number. ");
+						} else if( distEntry > 99) {
+							errorList.push("Distance goal should be smaller (in miles). ");
+						} else if( !isNumeric(calEntry)) {
+							errorList.push("Calorie goal should be a number. ");
+						} else if( calEntry > 99999) {
+							errorList.push("Calorie goal should be smaller (in miles). ");
+						}
+						if( errorList.length === 0) {
+							console.log("no errors");
+							steps.goal = stepEntry;
+							distance.goal = distEntry;
+							calories.goal = calEntry;
+							steps.saveData;
+							distance.saveData;
+							calories.saveData;
+							// this function should include a way to update all the cahrts //	
+							this.interact();
+							return false;
+						} else {
+							console.log("found some errors")
+							return false;
+						}
+					} else {
+						return false;
+					}
+				}
 			}
 
-			var settingsBox = new settingsButton("settingsBox");
+		// CREATE GOAL TYPES //
+			var goalType = function(typeName,total,goal,average) {
+				this.typeName = typeName;
+				this.total = total;
+				this.goal = goal;
+				this.average = average;
+				this.remaining = Math.max(goal - total, 0);
+				this.saveData = function() {
+					localStorage.setItem(this.typeName + "Goal", this.goal)
+				}
+				this.loadData = function() {
+					try {
+						this.goal = localStorage.getItem(this.typeName + "Goal");
+						console.log("goal loaded");
+					} catch(err) {
+						console.log("no goal to load");
+					}
+					
+				}
+			}
 
-
-		var goalType = function(total,goal,average) {
-			this.total = total;
-			this.goal = goal;
-			this.average = average;
-			this.remaining = Math.max(goal - total, 0);
-		}
-
-		var steps = new goalType(1000,5000,2500);
-		var distance = new goalType(3,3,3.5);
-		var calories = new goalType (2000,2500,2100);
+			var steps = new goalType("steps",1000,5000,2500);
+			var distance = new goalType("distance",3,3,3.5);
+			var calories = new goalType ("calories",2000,2500,2100);
+			steps.loadData;
+			distance.loadData;
+			calories.loadData;
+			console.log(localStorage.getItem("caloriesGoal"))
 
 		// CREATE LOGIC CLASS AND CREATE LOGIC ITEMS //
 			var logicVariables = function(initialActivity, initialMetric, InitialGoal) {
@@ -590,11 +717,11 @@
 
 			        var returnLogic = document.getElementById("returnLogic");
 			        if( remainderVar <= 0) {
-			        	returnLogic.innerHTML = "Congratulations! You already reached your " + goal + " goal today!";
+			        	returnLogic.innerHTML = "<b>Congratulations! You already reached your " + goal + " goal today!<b>";
 			        } else if( this.activity === "exercise" && (this.goal === "step" || this.goal === "distance" || this.metric === "miles")) {
-			        	returnLogic.innerHTML = "Oops! I Don't think you can reach your " + goal + " goal that way!";
+			        	returnLogic.innerHTML = "<b>Oops! I Don't think you can reach your " + goal + " goal that way!<b>";
 			        } else {
-			        	returnLogic.innerHTML = activity.charAt(0).toUpperCase() + activity.slice(1) + " for " + outputVar.toFixed(1) + " " + metric + " to <i>reach</i>  your " + goal + " goal today!";
+			        	returnLogic.innerHTML = "<b>" + activity.charAt(0).toUpperCase() + activity.slice(1) + " for " + outputVar.toFixed(1) + " " + metric + " to <i>reach</i>  your " + goal + " goal today!<b>";
 			    	}
 			    }
 			}
@@ -798,7 +925,9 @@
 
 		// CALORIE CHARTS //
 
-		// CREATE CHARTS //
+		// ACTIVITIES TO PERFORM ON LOAD //
+
+		// CREATE CHARTS (must go after goalTypes are created) //
 			var summaryBar = new Chartist.Bar("#ctSummaryBar", summaryChart.chartData, summaryChart.chartOptions);
 			var stepLine = new Chartist.Line("#ctStepLine", stepChart30.chartData, stepChart30.chartOptions);
 			var distLine = new Chartist.Line("#ctDistLine", distChart30.chartData, distChart30.chartOptions);
@@ -806,7 +935,8 @@
 			var updateChart = function(chartObject,targetChart) {
 				targetChart.update(chartObject.chartData,chartObject.chartOptions,1);
 			}
+
+		var settingsBox = new settingsButton("settingsBox");
 	</script>
 </html>
-
 
